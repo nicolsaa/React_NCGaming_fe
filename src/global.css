@@ -1,0 +1,82 @@
+@layer utilities {
+    .nav-link-hover {
+        position: relative;
+    }
+
+    .nav-link-hover::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background: linear-gradient(to right, #a855f7, #ec4899);
+        transition: width 0.3s ease;
+        border-radius: 1px;
+    }
+
+    .nav-link-hover:hover::after {
+        width: 100%;
+    }
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    .animate-float {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Bebas+Neue&display=swap');
+
+    .font-orbitron {
+        font-family: 'Orbitron', sans-serif;
+    }
+
+    .font-bebas {
+        font-family: 'Bebas Neue', sans-serif;
+    }
+
+    /* Efectos de texto similares al original */
+    .orbitron-text {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 3rem;
+        font-weight: 700;
+        color: #6f42c1;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .bebas-text {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 2rem;
+        font-weight: 300;
+        color: #444;
+    }
+
+    /* Animación suave para el carrusel de marcas */
+    @keyframes scroll {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    .brands-track {
+        animation: scroll 30s linear infinite;
+    }
+
+    .brands-track:hover {
+        animation-play-state: paused;
+    }
+}
