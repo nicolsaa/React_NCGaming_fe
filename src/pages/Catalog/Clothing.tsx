@@ -8,7 +8,10 @@ import { Card, CardContent } from '@/components/ui/card';
 
 const Clothing: React.FC = () => {
     const { getProductsByCategory, loading } = useProducts();
-    const allClothing = getProductsByCategory('ropa');
+    const allClothing = [
+        ...getProductsByCategory('poleras'),
+        ...getProductsByCategory('polerones')
+    ];
 
     const [selectedSize, setSelectedSize] = useState<string>('all');
     const [selectedType, setSelectedType] = useState<string>('all');
