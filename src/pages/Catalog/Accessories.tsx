@@ -3,15 +3,13 @@ import { useProducts } from '@/context/ProductsContext';
 import ProductGrid from '@/components/products/ProductGrid';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import {
-    Zap,
-    Gift
-} from 'lucide-react';
+import { Zap, Gift } from 'lucide-react';
 
 const Accessories: React.FC = () => {
     const { getProductsByCategory, loading } = useProducts();
     const accessories = getProductsByCategory('accesorios');
 
+    // Accesorios destacados (featured = true)
 
 
     const popularAccessories = accessories
@@ -20,18 +18,34 @@ const Accessories: React.FC = () => {
 
     return (
         <div className="container mx-auto px-4 py-8">
+
             {/* Header */}
             <div className="mb-8">
                 <Badge variant="outline" className="mb-4 text-sm">
                     Accesorios Geek
                 </Badge>
-                <h1 className="text-3xl font-bold text-gray-900 mb-4">Accesorios y Complementos</h1>
+                <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                    Accesorios y Complementos
+                </h1>
                 <p className="text-gray-600 max-w-2xl">
                     Completa tu setup gaming y estilo de vida geek con nuestros accesorios.
                     Desde tecnología hasta artículos de colección.
                 </p>
             </div>
 
+            {/* Todos los accesorios */}
+            <div className="mb-12">
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center space-x-2">
+                        <Gift className="h-5 w-5 text-purple-600" />
+                        <h2 className="text-2xl font-semibold">Todos los Accesorios</h2>
+                    </div>
+
+                    <Badge variant="secondary">{accessories.length} productos</Badge>
+                </div>
+
+                <ProductGrid products={accessories} loading={loading} />
+            </div>
 
 
             {/* Accesorios populares */}
@@ -41,23 +55,10 @@ const Accessories: React.FC = () => {
                         <Zap className="h-5 w-5 text-yellow-500" />
                         <h2 className="text-2xl font-semibold">Accesorios Populares</h2>
                     </div>
+
                     <ProductGrid products={popularAccessories} loading={false} />
                 </div>
             )}
-
-            {/* Todos los accesorios */}
-            <div className="mb-8">
-                <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center space-x-2">
-                        <Gift className="h-5 w-5 text-purple-600" />
-                        <h2 className="text-2xl font-semibold">Todos los Accesorios</h2>
-                    </div>
-                    <Badge variant="secondary">
-                        {accessories.length} productos
-                    </Badge>
-                </div>
-                <ProductGrid products={accessories} loading={loading} />
-            </div>
 
             {/* Banner de regalo */}
             <Card className="bg-gradient-to-r from-pink-500 to-purple-600 text-white">
@@ -73,6 +74,7 @@ const Accessories: React.FC = () => {
                     </Badge>
                 </CardContent>
             </Card>
+
         </div>
     );
 };

@@ -12,6 +12,15 @@ const Figures: React.FC = () => {
 
     return (
         <div className="container mx-auto p-6">
+            {/* Header */}
+                    <div className="mb-8">
+                        <Badge variant="outline" className="mb-4 text-sm">Figuras Coleccionables</Badge>
+                        <h1 className="text-3xl font-bold text-gray-900 mb-4">Figuras de Colección</h1>
+                        <p className="text-gray-600 max-w-2xl">
+                            Descubre figuras de tus personajes favoritos. Encuentra figuras de colección, Pop! vinyl, model kits y ediciones especiales para tu colección.
+                        </p>
+                    </div>
+
             {/* Todas las Figuras */}
             <div className="mb-8">
                 <div className="flex items-center justify-between mb-6">

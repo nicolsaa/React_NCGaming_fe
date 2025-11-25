@@ -16,8 +16,6 @@ const Games: React.FC = () => {
         { id: 'all', name: 'Todas las Plataformas', icon: GamepadIcon },
         { id: 'nintendo', name: 'Nintendo Switch', icon: Monitor },
         { id: 'playstation', name: 'PlayStation', icon: Smartphone },
-        { id: 'xbox', name: 'Xbox', icon: Cloud },
-        { id: 'pc', name: 'PC Gaming', icon: Monitor },
     ];
 
     const filteredGames = allGames.filter(game =>
@@ -40,28 +38,6 @@ const Games: React.FC = () => {
                     Desde los últimos lanzamientos hasta clásicos atemporales.
                 </p>
             </div>
-
-            {/* Juegos destacados */}
-            {featuredGames.length > 0 && (
-                <div className="mb-12">
-                    <h2 className="text-2xl font-semibold mb-6">🎮 Juegos Destacados</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {featuredGames.map((game) => (
-                            <Card key={game.id} className="bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200">
-                                <CardContent className="p-6">
-                                    <Badge className="mb-3 bg-purple-600">Destacado</Badge>
-                                    <h3 className="font-semibold text-lg mb-2">{game.name}</h3>
-                                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">{game.description}</p>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-xl font-bold text-purple-600">${game.price.toFixed(2)}</span>
-                                        <Badge variant="outline">En stock</Badge>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
-                </div>
-            )}
 
             {/* Filtros por plataforma */}
             <div className="mb-8">
