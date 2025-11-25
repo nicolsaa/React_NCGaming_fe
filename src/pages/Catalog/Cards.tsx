@@ -36,7 +36,7 @@ const Cards: React.FC = () => {
       </div>
 
       {/* Estadísticas rápidas */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
         {cardTypes.map((type) => {
           const IconComponent = type.icon;
           return (
