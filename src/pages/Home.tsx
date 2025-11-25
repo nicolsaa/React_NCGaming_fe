@@ -8,7 +8,8 @@ import {
     ChevronLeft,
     ChevronRight,
     Play,
-    Pause
+    Pause,
+    Images
 } from 'lucide-react';
 
 // Import static assets from src/assets/images
@@ -56,6 +57,7 @@ const Home: React.FC = () => {
         { src: img3, alt: 'carrusel figuras', link: '/catalogo-figuras' },
         { src: accesoriosImg, alt: 'carrusel accesorios', link: '/catalogo-accesorios' },
         { src: silenthillImg, alt: 'carrusel silentHillF', link: '/catalogo-juegos' },
+
     ];
 
     // Galería de categorías
@@ -311,7 +313,7 @@ const Home: React.FC = () => {
                 </div>
             </section>
 
-            {/* Productos Destacados */}
+            Productos Destacados
             <section className="container mx-auto px-4">
                 <div className="text-center mb-12">
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">

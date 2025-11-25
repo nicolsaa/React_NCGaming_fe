@@ -4,10 +4,6 @@ import ProductGrid from '@/components/products/ProductGrid';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
-    Headphones,
-    Smartphone,
-    Laptop,
-    Watch,
     Zap,
     Gift
 } from 'lucide-react';
@@ -16,32 +12,7 @@ const Accessories: React.FC = () => {
     const { getProductsByCategory, loading } = useProducts();
     const accessories = getProductsByCategory('accesorios');
 
-    const accessoryTypes = [
-        {
-            name: 'Audio',
-            icon: Headphones,
-            description: 'Audífonos, altavoces y más',
-            count: accessories.filter(p => p.name.toLowerCase().includes('audífono') || p.name.toLowerCase().includes('audio')).length
-        },
-        {
-            name: 'Móviles',
-            icon: Smartphone,
-            description: 'Fundas, protectores y accesorios',
-            count: accessories.filter(p => p.name.toLowerCase().includes('móvil') || p.name.toLowerCase().includes('phone')).length
-        },
-        {
-            name: 'PC & Laptop',
-            icon: Laptop,
-            description: 'Teclados, mouse y accesorios',
-            count: accessories.filter(p => p.name.toLowerCase().includes('teclado') || p.name.toLowerCase().includes('mouse')).length
-        },
-        {
-            name: 'Wearables',
-            icon: Watch,
-            description: 'Relojes y pulseras inteligentes',
-            count: accessories.filter(p => p.name.toLowerCase().includes('reloj') || p.name.toLowerCase().includes('pulsera')).length
-        },
-    ];
+
 
     const popularAccessories = accessories
         .filter(acc => acc.featured)
@@ -61,26 +32,7 @@ const Accessories: React.FC = () => {
                 </p>
             </div>
 
-            {/* Categorías de accesorios */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                {accessoryTypes.map((type) => {
-                    const IconComponent = type.icon;
-                    return (
-                        <Card key={type.name} className="hover:shadow-lg transition-shadow cursor-pointer">
-                            <CardContent className="p-6 text-center">
-                                <div className="flex justify-center mb-3">
-                                    <div className="p-3 bg-purple-100 rounded-full">
-                                        <IconComponent className="h-6 w-6 text-purple-600" />
-                                    </div>
-                                </div>
-                                <h3 className="font-semibold mb-1">{type.name}</h3>
-                                <p className="text-sm text-gray-600 mb-2">{type.description}</p>
-                                <Badge variant="secondary">{type.count} productos</Badge>
-                            </CardContent>
-                        </Card>
-                    );
-                })}
-            </div>
+
 
             {/* Accesorios populares */}
             {popularAccessories.length > 0 && (
