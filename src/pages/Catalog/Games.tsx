@@ -8,7 +8,7 @@ import { GamepadIcon, Monitor, Smartphone, Cloud, Shield } from 'lucide-react';
 
 const Games: React.FC = () => {
     const { getProductsByCategory, loading } = useProducts();
-    const allGames = getProductsByCategory('juegos');
+    const allGames = getProductsByCategory('videojuegos');
 
     const [selectedPlatform, setSelectedPlatform] = useState<string>('all');
 
