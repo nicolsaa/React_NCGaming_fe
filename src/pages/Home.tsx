@@ -64,10 +64,10 @@ const Home: React.FC = () => {
     ];
 
     const benefits = [
-        { src: envioImg, alt: "Envío" },
-        { src: seguroImg, alt: "Compra Segura" },
-        { src: garantiaImg, alt: "Garantía" },
-        { src: originalImg, alt: "Original" },
+        { src: envioImg },
+        { src: seguroImg },
+        { src: garantiaImg },
+        { src: originalImg },
     ];
 
     // Autoplay carrusel
@@ -144,8 +144,8 @@ const Home: React.FC = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-12 justify-center">
                     {benefits.map((b, index) => (
                         <div key={index}>
-                            <img src={b.src} alt={b.alt} className="w-[350px] h-[350px] mx-auto object-contain" />
-                            <p className="mt-2 font-medium">{b.alt}</p>
+                            <img src={b.src} className="w-[350px] h-[350px] mx-auto object-contain" />
+                            <p className="mt-2 font-medium"></p>
                         </div>
                     ))}
                 </div>

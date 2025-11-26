@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
-import { CardsIcon } from '@/components/icons/CardsIcon';
 import {
-    Zap,
     Heart,
     ChevronRight,
     Send,
@@ -52,34 +50,28 @@ const Footer: React.FC = () => {
     ];
 
     const renderSocialIcon = (icon: string) => {
-    switch (icon) {
-        case 'tiktok':
-            return <FontAwesomeIcon icon={faTiktok} size="lg" />;
-        case 'instagram':
-            return <FontAwesomeIcon icon={faInstagram} size="lg" />;
-        case 'discord':
-            return <FontAwesomeIcon icon={faDiscord} size="lg" />;
-        case 'youtube':
-            return <FontAwesomeIcon icon={faYoutube} size="lg" />;
-        default:
-            return null;
-    }
-};
+        switch (icon) {
+            case 'tiktok':
+                return <FontAwesomeIcon icon={faTiktok} size="lg" />;
+            case 'instagram':
+                return <FontAwesomeIcon icon={faInstagram} size="lg" />;
+            case 'discord':
+                return <FontAwesomeIcon icon={faDiscord} size="lg" />;
+            case 'youtube':
+                return <FontAwesomeIcon icon={faYoutube} size="lg" />;
+            default:
+                return null;
+        }
+    };
 
 
     return (
         <footer className="relative bg-gradient-to-r from-purple-900 to-pink-800 text-white overflow-hidden border-t-4 border-pink-300">
             {/* Anime Characters Floating */}
-            <div className="absolute bottom-0 w-full flex justify-between px-8 lg:px-16 opacity-20 pointer-events-none">
-                <div className="animate-bounce" style={{ animationDelay: '0s' }}>
-                    <Gamepad2 className="h-16 w-16" />
-                </div>
-                <div className="animate-bounce" style={{ animationDelay: '1s' }}>
-                    <Heart className="h-16 w-16" />
-                </div>
-                <div className="animate-bounce" style={{ animationDelay: '2s' }}>
-                    <Zap className="h-16 w-16" />
-                </div>
+            <div className="absolute bottom-0 w-full flex justify-between px-8 lg:px-16">
+                <div className="animate-bounce text-6xl" style={{ animationDelay: '0s' }}>🎮</div>
+                <div className="animate-bounce text-6xl" style={{ animationDelay: '1s' }}>🦊</div>
+                <div className="animate-bounce text-6xl" style={{ animationDelay: '2s' }}>⚡</div>
             </div>
 
             <div className="relative z-10 container mx-auto px-4 py-16">
