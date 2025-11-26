@@ -1,19 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-
-// UI
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-
-// Contexto
-import { useProducts } from "@/context/ProductsContext";
-import ProductGrid from "@/components/products/ProductGrid";
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { useProducts } from '@/context/ProductsContext';
+import ProductGrid from '@/components/products/ProductGrid';
+import {
+    ChevronLeft,
+    ChevronRight,
+    Play,
+    Pause,
+} from 'lucide-react';
 
 // Galería
 import Gallery from "@/pages/Gallery";
-
-// Iconos
-import { ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
 
 // Carrusel principal (import de imágenes)
 import img1 from "@/assets/images/1.png";
@@ -59,11 +57,13 @@ const Home: React.FC = () => {
 
     // Slider principal
     const carouselImages = [
-        { src: img1, alt: "carrusel pokemon", link: "/catalogo-cartas" },
-        { src: img2, alt: "carrusel ropa", link: "/catalogo-ropa" },
-        { src: img3, alt: "carrusel figuras", link: "/catalogo-figuras" },
-        { src: accesoriosImg, alt: "carrusel accesorios", link: "/catalogo-accesorios" },
-        { src: silenthillImg, alt: "carrusel silentHillF", link: "/catalogo-juegos" },
+
+        { src: img1, alt: 'carrusel pokemon', link: '/catalogo-cartas' },
+        { src: img2, alt: 'carrusel ropa', link: '/catalogo-ropa' },
+        { src: img3, alt: 'carrusel figuras', link: '/catalogo-figuras' },
+        { src: accesoriosImg, alt: 'carrusel accesorios', link: '/catalogo-accesorios' },
+        { src: silenthillImg, alt: 'carrusel silentHillF', link: '/catalogo-juegos' },
+
     ];
 
     // Galería categorías
@@ -108,6 +108,8 @@ const Home: React.FC = () => {
             link: "/catalogo-juegos",
             className: "col-span-1",
         },
+
+
     ];
 
     const brands = [
@@ -278,11 +280,6 @@ const Home: React.FC = () => {
                     </div>
                 </div>
             </section>
-
-
-
-
-
 
             {/* 🔥 Productos Destacados */}
             <section className="container mx-auto px-4">

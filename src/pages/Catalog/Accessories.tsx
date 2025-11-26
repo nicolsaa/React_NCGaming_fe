@@ -10,6 +10,8 @@ const Accessories: React.FC = () => {
     const accessories = getProductsByCategory('accesorios');
 
     // Accesorios destacados (featured = true)
+
+
     const popularAccessories = accessories
         .filter(acc => acc.featured)
         .slice(0, 4);
@@ -44,6 +46,7 @@ const Accessories: React.FC = () => {
 
                 <ProductGrid products={accessories} loading={loading} />
             </div>
+
 
             {/* Accesorios populares */}
             {popularAccessories.length > 0 && (
