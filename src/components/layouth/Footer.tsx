@@ -2,18 +2,28 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
+import { CardsIcon } from '@/components/icons/CardsIcon';
 import {
-    Gamepad2,
     Zap,
     Heart,
     ChevronRight,
     Send,
-    ShoppingBag,
     Shirt,
-    GamepadIcon,
-    Armchair,
+    WalletCards,
+    Gamepad2,
+    Shapes,
+    Gem,
+
 } from 'lucide-react';
-import { CardsIcon } from '@/components/icons/CardsIcon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faTiktok,
+    faInstagram,
+    faDiscord,
+    faYoutube
+} from '@fortawesome/free-brands-svg-icons';
+
+
 
 const Footer: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -27,11 +37,11 @@ const Footer: React.FC = () => {
     };
 
     const productLinks = [
-        { href: '/catalogo-figuras', label: 'Figuras', icon: ShoppingBag },
-        { href: '/catalogo-cartas', label: 'Cartas', icon: CardsIcon },
+        { href: '/catalogo-figuras', label: 'Figuras', icon: Shapes },
+        { href: '/catalogo-cartas', label: 'Cartas', icon: WalletCards },
         { href: '/catalogo-ropa', label: 'Ropa', icon: Shirt },
-        { href: '/catalogo-juegos', label: 'Videojuegos', icon: GamepadIcon },
-        { href: '/catalogo-accesorios', label: 'Accesorios', icon: Armchair },
+        { href: '/catalogo-juegos', label: 'Videojuegos', icon: Gamepad2 },
+        { href: '/catalogo-accesorios', label: 'Accesorios', icon: Gem },
     ];
 
     const socialLinks = [
@@ -42,19 +52,20 @@ const Footer: React.FC = () => {
     ];
 
     const renderSocialIcon = (icon: string) => {
-        switch (icon) {
-            case 'tiktok':
-                return <span className="text-lg">🎵</span>;
-            case 'instagram':
-                return <span className="text-lg">📷</span>;
-            case 'discord':
-                return <span className="text-lg">💬</span>;
-            case 'youtube':
-                return <span className="text-lg">📺</span>;
-            default:
-                return null;
-        }
-    };
+    switch (icon) {
+        case 'tiktok':
+            return <FontAwesomeIcon icon={faTiktok} size="lg" />;
+        case 'instagram':
+            return <FontAwesomeIcon icon={faInstagram} size="lg" />;
+        case 'discord':
+            return <FontAwesomeIcon icon={faDiscord} size="lg" />;
+        case 'youtube':
+            return <FontAwesomeIcon icon={faYoutube} size="lg" />;
+        default:
+            return null;
+    }
+};
+
 
     return (
         <footer className="relative bg-gradient-to-r from-purple-900 to-pink-800 text-white overflow-hidden border-t-4 border-pink-300">

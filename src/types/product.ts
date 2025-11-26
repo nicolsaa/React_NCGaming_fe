@@ -8,6 +8,7 @@ export interface Product {
     stock: number;
     featured?: boolean;
     rating?: number;
+    sizes?: string[];
 }
 
 export interface Review {

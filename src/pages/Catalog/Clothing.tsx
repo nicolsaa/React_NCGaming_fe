@@ -3,7 +3,7 @@ import { useProducts } from '@/context/ProductsContext';
 import ProductGrid from '@/components/products/ProductGrid';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Shirt, Users, Star } from 'lucide-react';
+import { Users, Star } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
 const Clothing: React.FC = () => {

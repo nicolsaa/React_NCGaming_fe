@@ -131,25 +131,6 @@ const ProductDetail: React.FC = () => {
                         </CardContent>
                     </Card>
 
-                    {/* Miniaturas */}
-                    <div className="flex space-x-4 overflow-x-auto py-2">
-                        {productImages.map((image, index) => (
-                            <button
-                                key={index}
-                                onClick={() => setSelectedImage(index)}
-                                className={`flex-shrink-0 w-20 h-20 border-2 rounded-lg overflow-hidden transition-all ${selectedImage === index
-                                        ? 'border-purple-500 ring-2 ring-purple-200'
-                                        : 'border-gray-200 hover:border-gray-300'
-                                    }`}
-                            >
-                                <img
-                                    src={image}
-                                    alt={`Vista ${index + 1} de ${product.name}`}
-                                    className="w-full h-full object-cover"
-                                />
-                            </button>
-                        ))}
-                    </div>
                 </div>
 
                 {/* Información del producto */}
@@ -289,22 +270,6 @@ const ProductDetail: React.FC = () => {
                     </Card>
                 </div>
             </div>
-
-            {/* Productos relacionados */}
-            <section className="mb-16">
-                <h2 className="text-2xl font-bold mb-8">Productos Relacionados</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {/* Aquí irían productos relacionados */}
-                    <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-                        <CardContent className="p-4">
-                            <div className="aspect-square bg-gray-200 rounded-lg mb-3"></div>
-                            <h3 className="font-semibold mb-1">Producto Relacionado</h3>
-                            <p className="text-purple-600 font-bold">$49.99</p>
-                        </CardContent>
-                    </Card>
-                    {/* Repetir más tarjetas... */}
-                </div>
-            </section>
 
             {/* Reseñas */}
             <section>
