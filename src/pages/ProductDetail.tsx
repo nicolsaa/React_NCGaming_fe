@@ -26,29 +26,22 @@ const ProductDetail: React.FC = () => {
     const { addToCart } = useCart();
     const { products } = useProducts();
 
-    const [selectedImage, setSelectedImage] = useState(0);
+    const selectedImage = 0;
     const [quantity, setQuantity] = useState(1);
     const [isFavorite, setIsFavorite] = useState(false);
 
-    // Encontrar el producto por ID
     const product = products.find(p => p.id === id);
 
-    // Mock de imágenes adicionales - en producción vendrían del producto
     const productImages = [
         product?.image || '/images/placeholder.jpg',
-        '/images/product-2.jpg',
-        '/images/product-3.jpg',
-        '/images/product-4.jpg'
     ];
 
-    // Mock de datos de envío
     const shippingInfo = {
         freeShipping: true,
         deliveryTime: '2-4 días',
         returnPolicy: '30 días'
     };
 
-    // Mock de reseñas
     const reviews = {
         average: 4.5,
         total: 128,
@@ -56,7 +49,6 @@ const ProductDetail: React.FC = () => {
     };
 
     useEffect(() => {
-        // Scroll to top cuando se carga el producto
         window.scrollTo(0, 0);
     }, [id]);
 
@@ -77,7 +69,6 @@ const ProductDetail: React.FC = () => {
         for (let i = 0; i < quantity; i++) {
             addToCart(product);
         }
-        // Podrías agregar una notificación aquí
     };
 
     const renderStars = (rating: number) => {
@@ -120,7 +111,6 @@ const ProductDetail: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
                 {/* Galería de imágenes */}
                 <div className="space-y-4">
-                    {/* Imagen principal */}
                     <Card className="overflow-hidden">
                         <CardContent className="p-0">
                             <img
@@ -130,39 +120,39 @@ const ProductDetail: React.FC = () => {
                             />
                         </CardContent>
                     </Card>
-
                 </div>
 
                 {/* Información del producto */}
                 <div className="space-y-6">
-                    {/* Header */}
-                    <div>
-                        <Badge variant="secondary" className="mb-3 capitalize">
-                            {product.category}
-                        </Badge>
-                        <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
+                    <Badge variant="secondary" className="mb-3 capitalize">
+                        {product.category}
+                    </Badge>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
 
-                        {/* Rating */}
-                        <div className="flex items-center space-x-2 mb-4">
-                            <div className="flex items-center space-x-1">
-                                {renderStars(reviews.average)}
-                            </div>
-                            <span className="text-sm text-gray-600">
-                                {reviews.average} ({reviews.total} reseñas)
-                            </span>
+                    {/* Rating */}
+                    <div className="flex items-center space-x-2 mb-4">
+                        <div className="flex items-center space-x-1">
+                            {renderStars(reviews.average)}
                         </div>
+                        <span className="text-sm text-gray-600">
+                            {reviews.average} ({reviews.total} reseñas)
+                        </span>
+                    </div>
 
-                        {/* Precio */}
-                        <div className="flex items-baseline space-x-2 mb-4">
-                            <span className="text-3xl font-bold text-purple-600">
-                                ${product.price.toFixed(2)}
+                    {/* Precio */}
+                    <div className="flex items-baseline space-x-2 mb-4">
+                        <span className="text-3xl font-bold text-purple-600">
+                            {new Intl.NumberFormat('es-CL', {
+                                style: 'currency',
+                                currency: 'CLP',
+                                minimumFractionDigits: 0
+                            }).format(product.price)}
+                        </span>
+                        {product.price > 50000 && (
+                            <span className="text-sm text-green-600 bg-green-50 px-2 py-1 rounded-full">
+                                ¡Envío gratis!
                             </span>
-                            {product.price > 50 && (
-                                <span className="text-sm text-green-600 bg-green-50 px-2 py-1 rounded-full">
-                                    ¡Envío gratis!
-                                </span>
-                            )}
-                        </div>
+                        )}
                     </div>
 
                     <Separator />
@@ -188,7 +178,6 @@ const ProductDetail: React.FC = () => {
 
                     {/* Cantidad y Acciones */}
                     <div className="space-y-4">
-                        {/* Selector de cantidad */}
                         <div className="flex items-center space-x-4">
                             <span className="font-medium">Cantidad:</span>
                             <div className="flex items-center border rounded-lg">
@@ -212,7 +201,6 @@ const ProductDetail: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Botones de acción */}
                         <div className="flex flex-col sm:flex-row gap-4">
                             <Button
                                 size="lg"
@@ -228,8 +216,7 @@ const ProductDetail: React.FC = () => {
                                 variant="outline"
                                 size="icon"
                                 onClick={() => setIsFavorite(!isFavorite)}
-                                className={`flex-shrink-0 ${isFavorite ? 'bg-red-50 border-red-200 text-red-600' : ''
-                                    }`}
+                                className={`flex-shrink-0 ${isFavorite ? 'bg-red-50 border-red-200 text-red-600' : ''}`}
                             >
                                 <Heart className={`h-5 w-5 ${isFavorite ? 'fill-current' : ''}`} />
                             </Button>
@@ -277,7 +264,6 @@ const ProductDetail: React.FC = () => {
                 <Card>
                     <CardContent className="p-6">
                         <div className="flex flex-col md:flex-row gap-8">
-                            {/* Resumen de ratings */}
                             <div className="flex-shrink-0">
                                 <div className="text-center mb-4">
                                     <div className="text-4xl font-bold text-gray-900 mb-2">{reviews.average}</div>
@@ -303,10 +289,8 @@ const ProductDetail: React.FC = () => {
                                 </div>
                             </div>
 
-                            {/* Lista de reseñas */}
                             <div className="flex-1">
                                 <div className="space-y-4">
-                                    {/* Reseña de ejemplo */}
                                     <div className="border-b pb-4">
                                         <div className="flex items-center space-x-2 mb-2">
                                             <div className="flex items-center space-x-1">
@@ -320,8 +304,6 @@ const ProductDetail: React.FC = () => {
                                         </p>
                                         <span className="text-sm text-gray-500">Hace 2 días</span>
                                     </div>
-
-                                    {/* Más reseñas... */}
                                 </div>
 
                                 <Button variant="outline" className="mt-4">
