@@ -3,17 +3,25 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import {
-    Gamepad2,
-    Zap,
     Heart,
     ChevronRight,
     Send,
-    ShoppingBag,
     Shirt,
-    GamepadIcon,
-    Armchair,
+    WalletCards,
+    Gamepad2,
+    Shapes,
+    Gem,
+
 } from 'lucide-react';
-import { CardsIcon } from '@/components/icons/CardsIcon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faTiktok,
+    faInstagram,
+    faDiscord,
+    faYoutube
+} from '@fortawesome/free-brands-svg-icons';
+
+
 
 const Footer: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -27,11 +35,11 @@ const Footer: React.FC = () => {
     };
 
     const productLinks = [
-        { href: '/catalogo-figuras', label: 'Figuras', icon: ShoppingBag },
-        { href: '/catalogo-cartas', label: 'Cartas', icon: CardsIcon },
+        { href: '/catalogo-figuras', label: 'Figuras', icon: Shapes },
+        { href: '/catalogo-cartas', label: 'Cartas', icon: WalletCards },
         { href: '/catalogo-ropa', label: 'Ropa', icon: Shirt },
-        { href: '/catalogo-juegos', label: 'Videojuegos', icon: GamepadIcon },
-        { href: '/catalogo-accesorios', label: 'Accesorios', icon: Armchair },
+        { href: '/catalogo-juegos', label: 'Videojuegos', icon: Gamepad2 },
+        { href: '/catalogo-accesorios', label: 'Accesorios', icon: Gem },
     ];
 
     const socialLinks = [
@@ -44,31 +52,26 @@ const Footer: React.FC = () => {
     const renderSocialIcon = (icon: string) => {
         switch (icon) {
             case 'tiktok':
-                return <span className="text-lg">🎵</span>;
+                return <FontAwesomeIcon icon={faTiktok} size="lg" />;
             case 'instagram':
-                return <span className="text-lg">📷</span>;
+                return <FontAwesomeIcon icon={faInstagram} size="lg" />;
             case 'discord':
-                return <span className="text-lg">💬</span>;
+                return <FontAwesomeIcon icon={faDiscord} size="lg" />;
             case 'youtube':
-                return <span className="text-lg">📺</span>;
+                return <FontAwesomeIcon icon={faYoutube} size="lg" />;
             default:
                 return null;
         }
     };
 
+
     return (
         <footer className="relative bg-gradient-to-r from-purple-900 to-pink-800 text-white overflow-hidden border-t-4 border-pink-300">
             {/* Anime Characters Floating */}
-            <div className="absolute bottom-0 w-full flex justify-between px-8 lg:px-16 opacity-20 pointer-events-none">
-                <div className="animate-bounce" style={{ animationDelay: '0s' }}>
-                    <Gamepad2 className="h-16 w-16" />
-                </div>
-                <div className="animate-bounce" style={{ animationDelay: '1s' }}>
-                    <Heart className="h-16 w-16" />
-                </div>
-                <div className="animate-bounce" style={{ animationDelay: '2s' }}>
-                    <Zap className="h-16 w-16" />
-                </div>
+            <div className="absolute bottom-0 w-full flex justify-between px-8 lg:px-16">
+                <div className="animate-bounce text-6xl" style={{ animationDelay: '0s' }}>🎮</div>
+                <div className="animate-bounce text-6xl" style={{ animationDelay: '1s' }}>🦊</div>
+                <div className="animate-bounce text-6xl" style={{ animationDelay: '2s' }}>⚡</div>
             </div>
 
             <div className="relative z-10 container mx-auto px-4 py-16">
@@ -77,7 +80,7 @@ const Footer: React.FC = () => {
                     <div className="space-y-6">
                         <div>
                             <h3 className="text-2xl font-bold bg-gradient-to-r from-pink-300 to-purple-300 bg-clip-text text-transparent">
-                                N&CGAMING
+                                N&C GAMING
                             </h3>
                             <p className="text-gray-200 mt-4 leading-relaxed">
                                 Tu tienda favorita de artículos geek. ¡Encuentra los mejores productos
