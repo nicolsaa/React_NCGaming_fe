@@ -80,7 +80,7 @@ const Footer: React.FC = () => {
                     <div className="space-y-6">
                         <div>
                             <h3 className="text-2xl font-bold bg-gradient-to-r from-pink-300 to-purple-300 bg-clip-text text-transparent">
-                                N&CGAMING
+                                N&C GAMING
                             </h3>
                             <p className="text-gray-200 mt-4 leading-relaxed">
                                 Tu tienda favorita de artículos geek. ¡Encuentra los mejores productos
