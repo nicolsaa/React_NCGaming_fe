@@ -4,7 +4,7 @@ import ProductGrid from '@/components/products/ProductGrid';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { GamepadIcon, Monitor, Smartphone, Cloud, Shield } from 'lucide-react';
+import { GamepadIcon, Shield } from 'lucide-react';
 
 const Games: React.FC = () => {
     const { getProductsByCategory, loading } = useProducts();
@@ -14,8 +14,9 @@ const Games: React.FC = () => {
 
     const platforms = [
         { id: 'all', name: 'Todas las Plataformas', icon: GamepadIcon },
-        { id: 'nintendo', name: 'Nintendo Switch', icon: Monitor },
-        { id: 'playstation', name: 'PlayStation', icon: Smartphone },
+        { id: 'nintendo', name: 'Nintendo Switch', icon: GamepadIcon },
+        { id: 'playstation', name: 'PlayStation', icon: GamepadIcon},
+        { id: 'Xbox', name: 'Xbox', icon: GamepadIcon },
     ];
 
     const filteredGames = allGames.filter(game =>
@@ -23,7 +24,6 @@ const Games: React.FC = () => {
         game.name.toLowerCase().includes(selectedPlatform)
     );
 
-    const featuredGames = allGames.filter(game => game.featured).slice(0, 3);
 
     return (
         <div className="container mx-auto px-4 py-8">
