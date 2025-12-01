@@ -7,7 +7,7 @@
     "module": "ESNext",
     "types": ["vite/client"],
     "skipLibCheck": true,
-        "baseUrl": ".",
+        "base0": "localhost:8080",
     "paths": {
       "@/*": [
         "./src/*"
