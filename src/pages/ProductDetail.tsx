@@ -29,9 +29,11 @@ const ProductDetail: React.FC = () => {
     const selectedImage = 0;
     const [quantity, setQuantity] = useState(1);
     const [isFavorite, setIsFavorite] = useState(false);
+    const [selectedSize, setSelectedSize] = useState<string>('');
 
     const product = products.find(p => p.id === id);
 
+    // Galería de imágenes
     const productImages = [
         product?.image || '/images/placeholder.jpg',
     ];
@@ -52,6 +54,13 @@ const ProductDetail: React.FC = () => {
         window.scrollTo(0, 0);
     }, [id]);
 
+    // Si el producto tiene tallas, preseleccionar la primera al cargar
+    useEffect(() => {
+        if (product?.sizes && product.sizes.length > 0 && selectedSize === '') {
+            setSelectedSize(product.sizes[0]);
+        }
+    }, [product?.sizes]);
+
     if (!product) {
         return (
             <div className="container mx-auto px-4 py-16 text-center">
@@ -66,9 +75,7 @@ const ProductDetail: React.FC = () => {
     }
 
     const handleAddToCart = () => {
-        for (let i = 0; i < quantity; i++) {
-            addToCart(product);
-        }
+        addToCart(product, selectedSize || undefined);
     };
 
     const renderStars = (rating: number) => {
@@ -154,6 +161,22 @@ const ProductDetail: React.FC = () => {
                             </span>
                         )}
                     </div>
+
+                    {/* Tallas (si aplica) */}
+                    {product.sizes && product.sizes.length > 0 && (
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Talla</label>
+                            <select
+                                className="border rounded-md p-2"
+                                value={selectedSize}
+                                onChange={(e) => setSelectedSize(e.target.value)}
+                            >
+                                {product.sizes.map((sz) => (
+                                    <option key={sz} value={sz}>{sz}</option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
 
                     <Separator />
 
