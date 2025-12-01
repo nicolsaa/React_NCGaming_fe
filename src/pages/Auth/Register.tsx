@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import { useAuth } from '@/context/AuthContext';
+import { userService } from '@/services/userService';
 import {
     User,
     Mail,
@@ -121,23 +122,23 @@ const Register: React.FC = () => {
         setIsLoading(true);
 
         try {
-            // Simular registro exitoso - en producción conectarías con tu API
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            // Crear usuario mock
-            const newUser = {
-                id: Math.random().toString(36).substr(2, 9),
+            const createdUser = await userService.createUser({
+                fullUsername: formData.name,
                 email: formData.email,
-                name: formData.name,
-                role: 'USER' as const
-            };
+                password: formData.password,
+                role: 'USER'
+            });
 
-            // Loguear al usuario automáticamente después del registro
-            login(newUser);
+            // Map backend User type to AuthContext's User type
+            login({
+                id: (createdUser as any).id,
+                email: (createdUser as any).email,
+                name: formData.name,
+                role: 'USER'
+            } as any);
 
             setSuccess(true);
 
-            // Redirigir después de mostrar el mensaje de éxito
             setTimeout(() => {
                 navigate('/perfil');
             }, 2000);
