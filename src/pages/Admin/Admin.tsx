@@ -102,10 +102,13 @@ const Admin: React.FC = () => {
         }
     };
 
-    // Guardar productos en localStorage
+        // Guardar productos en localStorage
     const saveProducts = (newProducts: Product[]) => {
         localStorage.setItem('admin_products', JSON.stringify(newProducts));
         setProducts(newProducts);
+        // Notificar a otras pestañas que los productos han sido actualizados
+        const event = new CustomEvent('Geek_Shop_Products_Updated', { detail: { updatedAt: Date.now() } });
+        window.dispatchEvent(event);
     };
 
     // Abrir modal para nuevo producto

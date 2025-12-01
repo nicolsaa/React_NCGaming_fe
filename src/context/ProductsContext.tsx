@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useRef } from 'react';
 import type { Product } from '@/types';
 
 interface ProductsContextType {
@@ -35,7 +35,7 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             { id: "killua-polo", name: "Polera Killua Zoldyck: Lightning Killer - Hunter X Hunter", price: 15990, description: "Polera temática de Killua Zoldyck con diseño Lightning Killer.", image: "/src/assets/images/killua2.png", category: "poleras", stock: 20, sizes: ["S", "M", "L", "XL"], featured: true },
             { id: "gojo-polo", name: "Satoru Gojo: Infinite Judgment Edición especial - Jujutsu Kaisen", price: 25000, description: "Polera edición especial Infinite Judgment de Satoru Gojo.", image: "/src/assets/images/gojo.png", category: "poleras", stock: 20, sizes: ["S", "M", "L", "XL"], featured: true },
             { id: "shadow-polo", name: "Polera Acid Wash Shadow Monarch - Solo Leveling", price: 8000, description: "Polera estilo Acid Wash inspirada en el Shadow Monarch de Solo Leveling.", image: "/src/assets/images/solo.png", category: "poleras", stock: 20, sizes: ["S", "M", "L", "XL"], featured: false },
-            { id: "law-hoodie", name: "Polerón Trafalgar Law Tattoos - One Piece", price: 20000, description: "Polerón inspirado en Trafalgar Law con diseño de tatuajes.", image: "/src/assets/images/one.png", category: "polerones", stock: 15, sizes: ["S", "M", "L", "XL"], featured: false },
+            { id: "law-hoodie", name: "Polerón Trafalgar Law Tattoos - One Piece", price: 20000, description: "Polerón inspirado en Trafalgar Law con diseño de tatuajes.", image: "/src/assets/images/one.png", category: "poleras", stock: 15, sizes: ["S", "M", "L", "XL"], featured: false },
             { id: "homunculos-hoodie", name: "Polerón Homúnculos - Full Metal Alchemist Brotherhood", price: 5000, description: "Polerón inspirado en los Homúnculos de Full Metal Alchemist Brotherhood.", image: "/src/assets/images/fullmetal.png", category: "polerones", stock: 15, sizes: ["S", "M", "L", "XL"], featured: true },
             { id: "naruto-figure", name: "Figura Pop Up Parade: Naruto Uzumaki", price: 30000, description: "Figura Pop Up Parade de Naruto Uzumaki.", image: "/src/assets/images/naruto1.png", category: "figuras", stock: 10, featured: true },
             { id: "mew-model", name: "Model Kit Quick!! Bandai Hobby Pokémon: Mew", price: 15000, description: "Model Kit de Mew para ensamblar.", image: "/src/assets/images/mew.png", category: "figuras", stock: 12, featured: true },
@@ -67,7 +67,9 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         }
 
         // Actualiza la lista cuando el Admin guarde productos en localStorage
-        const handleUpdated = () => {
+        const handleUpdated = (event: Event) => {
+            const detail = (event as CustomEvent<any>).detail;
+            // detail could be used for logging or conditional reload
             try {
                 const updated = loadFromStorage();
                 setProducts(updated);
@@ -78,6 +80,22 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
         window.addEventListener('Geek_Shop_Products_Updated', handleUpdated);
         return () => window.removeEventListener('Geek_Shop_Products_Updated', handleUpdated);
+    }, []);
+
+    // Nuevo: escucha cambios en localStorage para admin_products desde otras pestañas
+    useEffect(() => {
+        const onStorage = (e: StorageEvent) => {
+            if (e.key === 'admin_products') {
+                try {
+                    const updated = loadFromStorage();
+                    setProducts(updated);
+                } catch (error) {
+                    console.error('Error refreshing products from storage:', error);
+                }
+            }
+        };
+        window.addEventListener('storage', onStorage);
+        return () => window.removeEventListener('storage', onStorage);
     }, []);
 
     const featuredProducts = products.filter(p => (p as any).featured);
