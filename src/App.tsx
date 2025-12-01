@@ -19,6 +19,8 @@ import Accessories from '@/pages/Catalog/Accessories';
 import Admin from '@/pages/Admin/Admin';
 import UserAdmin from '@/pages/Admin/UserAdmin';
 import ProductDetail from '@/pages/ProductDetail';
+import CheckoutSuccess from './pages/CheckoutSuccess';
+import Checkout from './pages/Checkout';
 
 // Componente Layout personalizado
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -58,6 +60,8 @@ function App() {
                 <Route path="/perfil" element={<Profile />} />
                 <Route path="/carrito" element={<Cart />} />
                 <Route path="/pedidos" element={<div className="container mx-auto p-8">Página de Pedidos - Próximamente</div>} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/checkout-success" element={<CheckoutSuccess />} />
                 
                 {/* Rutas protegidas - admin */}
                 <Route path="/admin" element={<Admin />} />
@@ -80,3 +84,4 @@ function App() {
 }
 
 export default App;
+

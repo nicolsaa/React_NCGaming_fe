@@ -46,7 +46,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     {/* Precio y stock */}
                     <div className="flex justify-between items-center mb-3">
                         <span className="text-xl font-bold text-purple-600">
-                            ${product.price.toFixed(2)}
+                            ${product.price.toLocaleString('es-CL')}
                         </span>
                         <span className={`text-sm ${product.stock > 0 ? 'text-green-600' : 'text-red-600'
                             }`}>

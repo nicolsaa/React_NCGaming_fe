@@ -5,11 +5,12 @@ import type { Product } from '@/types';
 export interface CartItem {
     product: Product;
     quantity: number;
+    size?: string;
 }
 
 export interface CartContextType {
     cartItems: CartItem[];
-    addToCart: (product: Product) => void;
+    addToCart: (product: Product, size?: string) => void;
     removeFromCart: (productId: string) => void;
     updateQuantity: (productId: string, quantity: number) => void;
     clearCart: () => void;
@@ -22,21 +23,22 @@ export const CartContext = createContext<CartContextType | undefined>(undefined)
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-    const addToCart = (product: Product) => {
+    const addToCart = (product: Product, size?: string) => {
         setCartItems(prev => {
-            const existing = prev.find(item => item.product.id === product.id);
+            const existing = prev.find(item => item.product.id === product.id && item.size === size);
             if (existing) {
                 return prev.map(item =>
-                    item.product.id === product.id
+                    item.product.id === product.id && item.size === size
                         ? { ...item, quantity: item.quantity + 1 }
                         : item
                 );
             }
-            return [...prev, { product, quantity: 1 }];
+            return [...prev, { product, quantity: 1, size }];
         });
     };
 
     const removeFromCart = (productId: string) => {
+        // Remove all variants of the product (across sizes)
         setCartItems(prev => prev.filter(item => item.product.id !== productId));
     };
 
