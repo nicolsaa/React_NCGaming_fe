@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -122,7 +122,8 @@ const Register: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const createdUser = await userService.createUser({
+const createdUser = await userService.createUser({
+                username: formData.name,
                 fullUsername: formData.name,
                 email: formData.email,
                 password: formData.password,
@@ -139,9 +140,6 @@ const Register: React.FC = () => {
 
             setSuccess(true);
 
-            setTimeout(() => {
-                navigate('/perfil');
-            }, 2000);
 
         } catch (err) {
             setError('Error al crear la cuenta. Por favor intenta nuevamente.');
@@ -149,6 +147,13 @@ const Register: React.FC = () => {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (success) {
+            const timer = setTimeout(() => navigate('/perfil'), 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [success, navigate]);
 
     return (
         <div
@@ -252,7 +257,7 @@ const Register: React.FC = () => {
                                     />
                                     <div className="flex justify-between text-xs text-gray-500">
                                         <span>Fortaleza:</span>
-                                        <span className={getPasswordStrengthColor(passwordStrength).replace('bg-', 'text-')}>
+                                        <span className={getPasswordStrengthColor(passwordStrength).replace('bg-', 'text-')} >
                                             {getPasswordStrengthText(passwordStrength)}
                                         </span>
                                     </div>

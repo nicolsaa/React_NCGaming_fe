@@ -19,13 +19,25 @@ export interface AuthResponse {
 export const authService = {
     // Login
     async login(credentials: AuthRequest): Promise<AuthResponse> {
-        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        // Intento 1: enviar payload con 'email'
+        let response = await fetch(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(credentials),
+            body: JSON.stringify({ email: credentials.email, password: credentials.password }),
         });
+
+        // Si falla, intentar con 'username' en lugar de 'email'
+        if (!response.ok) {
+            response = await fetch(`${API_BASE_URL}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username: credentials.email, password: credentials.password }),
+            });
+        }
 
         if (!response.ok) {
             const errorText = await response.text();

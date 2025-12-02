@@ -1,10 +1,11 @@
+export type Category = 'ropa' | 'accesorios' | 'figuras' | 'cartas' | 'juegos';
 export interface Product {
     id: string;
     name: string;
     price: number;
     description: string;
     image: string;
-    category: string;
+    category: Category;
     stock: number;
     featured?: boolean;
     rating?: number;
