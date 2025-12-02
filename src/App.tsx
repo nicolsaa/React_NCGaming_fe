@@ -65,8 +65,8 @@ function App() {
                 <Route path="/checkout-success" element={<CheckoutSuccess />} />
                 
                 {/* Rutas protegidas - admin */}
-<Route path="/admin" element={<ProtectedAdminRoute><Admin /></ProtectedAdminRoute>} />
-<Route path="/admin-usuarios" element={<ProtectedAdminRoute><UserAdmin /></ProtectedAdminRoute>} />
+                <Route path="/admin" element={<ProtectedAdminRoute><Admin /></ProtectedAdminRoute>} />
+                <Route path="/admin-usuarios" element={<ProtectedAdminRoute><UserAdmin /></ProtectedAdminRoute>} />
                 
                 {/* Ruta 404 */}
                 <Route path="*" element={

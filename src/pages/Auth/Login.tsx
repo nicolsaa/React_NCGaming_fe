@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import {
@@ -25,7 +25,7 @@ import {
 
 const Login: React.FC = () => {
     const [searchParams] = useSearchParams();
-const navigate = useNavigate();
+    const navigate = useNavigate();
     const { login: loginFromContext } = useAuth();
     const [loading, setLoading] = useState(false);
 
@@ -38,6 +38,14 @@ const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
+
+    // Navegación controlada en useEffect para evitar navegaciones durante render
+    useEffect(() => {
+        if (success) {
+            const timer = setTimeout(() => navigate('/'), 1500);
+            return () => clearTimeout(timer);
+        }
+    }, [success, navigate]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
@@ -76,18 +84,14 @@ const navigate = useNavigate();
 
         if (!validateForm()) return;
 
-try {
+        try {
             setLoading(true);
             await loginFromContext({ email: formData.email, password: formData.password, rememberMe: formData.rememberMe });
             setLoading(false);
 
             setSuccess(true);
 
-            // Redirigir después de mostrar el mensaje de éxito
-            setTimeout(() => {
-                navigate('/');
-            }, 1500);
-
+            // La navegación se maneja en useEffect al detectar 'success'
         } catch (err) {
             setLoading(false);
             const errorMessage = err instanceof Error ? err.message : 'Error al iniciar sesión';
@@ -95,17 +99,6 @@ try {
         }
     };
 
-    const handleDemoLogin = (role: 'USER' | 'ADMIN') => {
-        const demoUsers = {
-            USER: { email: 'usuario@demo.com', password: 'demo123' },
-            ADMIN: { email: 'admin@demo.com', password: 'admin123' }
-        };
-
-        setFormData(prev => ({
-            ...prev,
-            ...demoUsers[role]
-        }));
-    };
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4 bg-cover bg-center bg-no-repeat bg-gray-50">
@@ -120,29 +113,6 @@ try {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-                    {/* Botones de demo rápido */}
-                    <div className="grid grid-cols-2 gap-2">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleDemoLogin('USER')}
-                            className="text-xs"
-                            disabled={loading}
-                        >
-                            Demo Usuario
-                        </Button>
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleDemoLogin('ADMIN')}
-                            className="text-xs"
-                            disabled={loading}
-                        >
-                            Demo Admin
-                        </Button>
-                    </div>
 
                     {/* Formulario */}
                     <form onSubmit={handleSubmit} className="space-y-4">
