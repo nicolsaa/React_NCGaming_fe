@@ -2,7 +2,7 @@ export class ImageUtils {
     // Obtener imagen por defecto
     static getDefaultImage(): string {
 
-        return '/assets/images/Logo_sin_Fondo.png';
+        return 'src/assets/images/Logo_sin_Fondo.png';
     }
 
     // Validar si una URL de imagen es válida

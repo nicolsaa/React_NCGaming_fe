@@ -10,10 +10,7 @@ const Clothing: React.FC = () => {
 const { getProductsByCategory, loading } = useProducts();
 
 // Todos los productos de ropa
-const allClothing = [
-    ...getProductsByCategory('poleras'),
-    ...getProductsByCategory('polerones'),
-];
+const allClothing = getProductsByCategory('Ropa');
 
 const [selectedSize, setSelectedSize] = useState<string>('all');
 
@@ -21,11 +18,11 @@ const [selectedSize, setSelectedSize] = useState<string>('all');
 const sizes = ['all', 'S', 'M', 'L', 'XL'];
 
 // Filtrado funcional por talla
-const filteredClothing = allClothing.filter(product => {
+/*const filteredClothing = allClothing.filter(product => {
     if (selectedSize === 'all') return true;
     return product.sizes?.includes(selectedSize);
 });
-
+*/
 return (
     <div className="container mx-auto px-4 py-8">
 
@@ -61,7 +58,7 @@ return (
         {/* Contador de productos filtrados */}
         <div className="flex items-center justify-between mb-6">
             <p className="text-gray-600">
-                Mostrando {filteredClothing.length} de {allClothing.length} productos
+                Mostrando {allClothing.length} de {allClothing.length} productos
             </p>
             <Badge variant="secondary" className="flex items-center">
                 <Star className="h-3 w-3 mr-1" /> Diseños Exclusivos
@@ -69,7 +66,7 @@ return (
         </div>
 
         {/* Grid de productos filtrados */}
-        <ProductGrid products={filteredClothing} loading={loading} />
+        <ProductGrid products={allClothing} loading={loading} />
 
         {/* Guía de tallas */}
         <Card className="mt-12">
