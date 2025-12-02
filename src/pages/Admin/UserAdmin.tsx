@@ -28,8 +28,6 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import {
-    Plus,
-    Edit,
     Trash2,
     Search,
     Shield,
@@ -39,6 +37,10 @@ import {
     RefreshCw
 } from 'lucide-react';
 import type { User } from '@/types/index';
+import { userService } from '@/services/userService';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+const roleLabel = (r: string) => (r === 'ADMIN' ? 'Administrador' : 'Usuario');
 
 const UserAdmin: React.FC = () => {
     const { user: currentUser } = useAuth();
@@ -50,6 +52,10 @@ const UserAdmin: React.FC = () => {
     const [userToDelete, setUserToDelete] = useState<User | null>(null);
     const [actionLoading, setActionLoading] = useState(false);
 
+    // Estado para cambios de rol (optimista)
+    const [roleDraft, setRoleDraft] = useState<Record<string, 'USER' | 'ADMIN'>>({});
+    const [roleLoading, setRoleLoading] = useState<Record<string, boolean>>({});
+
     // Verificar permisos de administrador
     React.useEffect(() => {
         if (currentUser && currentUser.role !== 'ADMIN') {
@@ -57,18 +63,19 @@ const UserAdmin: React.FC = () => {
         }
     }, [currentUser, navigate]);
 
-    // Helper para obtener nombre a partir de firstName/lastName o username
+ // Helper para obtener nombre a partir de name o username
     const getDisplayName = (u: User) => {
-        if (u.firstName && u.lastName) return `${u.firstName} ${u.lastName}`;
+        if (u.name) return u.name;
+        if (u.fullUsername) return u.fullUsername;
         if (u.username) return u.username;
         return '';
     };
 
     // Filtrar usuarios
-    const filteredUsers = users.filter((user) =>
+    const filteredUsers = (users ?? []).filter((user) =>
         getDisplayName(user).toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.username?.toLowerCase().includes(searchTerm.toLowerCase())
+        (user.email ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.username ?? '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const handleDeleteClick = (user: User) => {
@@ -81,6 +88,7 @@ const UserAdmin: React.FC = () => {
             try {
                 setActionLoading(true);
                 await deleteUser(userToDelete.id);
+                await refetch();
                 setIsDeleteDialogOpen(false);
                 setUserToDelete(null);
             } catch (error) {
@@ -128,6 +136,52 @@ const UserAdmin: React.FC = () => {
         });
     };
 
+    const handleChangeRole = async (userId: string, newRole: 'USER' | 'ADMIN') => {
+        if (userId === currentUser?.id) {
+            // Evitar cambiar el rol del usuario logueado desde la administración
+            console.warn('No se puede cambiar tu propio rol desde la administración.');
+            return;
+        }
+        const currentRole = (users?.find((u) => u.id === userId)?.role ?? 'USER') as 'USER' | 'ADMIN';
+        // If no actual change, no-op
+        if (currentRole === newRole) return;
+
+        // Optimistic update: mostrar el nuevo rol de inmediato
+        setRoleDraft((draft) => ({ ...draft, [userId]: newRole }));
+        setRoleLoading((loading) => ({ ...loading, [userId]: true }));
+
+        try {
+            await userService.assignRole(userId, newRole);
+            // Refrescar para asegurar consistencia
+            await refetch();
+            // Limpiar draft tras confirmación
+            setRoleDraft((draft) => {
+                const next = { ...draft };
+                delete next[userId];
+                return next;
+            });
+        } catch (err) {
+            // Revertir si falla
+            setRoleDraft((draft) => {
+                const next = { ...draft };
+                delete next[userId];
+                return next;
+            });
+            console.error('Error al cambiar rol', err);
+        } finally {
+            setRoleLoading((loading) => {
+                const next = { ...loading };
+                delete next[userId];
+                return next;
+            });
+        }
+    };
+
+    const roleValueForUser = (u: User) => {
+        return (roleDraft[u.id] ?? u.role ?? 'USER') as 'USER' | 'ADMIN';
+    };
+
+    // Mostrar solo a admins
     if (!currentUser || currentUser.role !== 'ADMIN') {
         return null;
     }
@@ -135,7 +189,7 @@ const UserAdmin: React.FC = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8">
             <div className="container mx-auto px-4">
-                {/* Header */}
+                {/* Header */ }
                 <Card className="mb-6 border-0 shadow-2xl">
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>
@@ -143,7 +197,7 @@ const UserAdmin: React.FC = () => {
                                 Administración de Usuarios
                             </CardTitle>
                             <p className="text-gray-600 mt-1">
-                                {users.length} usuarios registrados en la plataforma
+                                {(users ?? []).length} usuarios registrados en la plataforma
                             </p>
                         </div>
                         <div className="flex gap-2">
@@ -155,15 +209,12 @@ const UserAdmin: React.FC = () => {
                                 <RefreshCw className={`h-4 w-4 mr-2 ${actionLoading ? 'animate-spin' : ''}`} />
                                 Actualizar
                             </Button>
-                            <Button>
-                                <Plus className="h-4 w-4 mr-2" />
-                                Nuevo Usuario
-                            </Button>
+                            {/* Botón "Nuevo Usuario" eliminado */}
                         </div>
                     </CardHeader>
                 </Card>
 
-                {/* Búsqueda y Filtros */}
+                {/* Búsqueda y Filtros */ }
                 <Card className="mb-6 border-0 shadow-2xl">
                     <CardContent className="p-6">
                         <div className="flex flex-col sm:flex-row gap-4">
@@ -183,7 +234,7 @@ const UserAdmin: React.FC = () => {
                     </CardContent>
                 </Card>
 
-                {/* Tabla de usuarios */}
+                {/* Tabla de usuarios */ }
                 <Card className="border-0 shadow-2xl">
                     <CardContent className="p-0">
                         {loading ? (
@@ -241,23 +292,33 @@ const UserAdmin: React.FC = () => {
                                                     <div className="text-sm text-gray-500">
                                                         @{user.username}
                                                     </div>
-                                                    {user.firstName && user.lastName && (
-                                                        <div className="text-xs text-gray-400">
-                                                            {user.firstName} {user.lastName}
-                                                        </div>
-                                                    )}
                                                 </div>
                                             </TableCell>
-<TableCell>
-  <div className="space-y-1">
-    <div className="flex items-center text-sm">
-      <Mail className="h-3 w-3 mr-2 text-gray-400" />
-      <span className="truncate">{user.email}</span>
-    </div>
-  </div>
-</TableCell>
                                             <TableCell>
-                                                {getRoleBadge(user.role)}
+                                                <div className="space-y-1">
+                                                    <div className="flex items-center text-sm">
+                                                        <Mail className="h-3 w-3 mr-2 text-gray-400" />
+                                                        <span className="truncate">{user.email}</span>
+                                                    </div>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className="flex items-center gap-2">
+                                                {getRoleBadge(roleValueForUser(user))}
+                                                <div className="ml-2" style={{ minWidth: 180 }}>
+                                                    <Select
+                                                        value={roleValueForUser(user)}
+                                                        onValueChange={(val) => handleChangeRole(user.id, val as 'USER' | 'ADMIN')}
+                                                        disabled={!!(roleLoading[user.id])}
+                                                    >
+                                                        <SelectTrigger size="sm" className="w-full">
+                                                            <SelectValue>{roleLabel(roleValueForUser(user))}</SelectValue>
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectItem value="USER">Usuario</SelectItem>
+                                                            <SelectItem value="ADMIN">Administrador</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
                                             </TableCell>
                                             <TableCell>
                                                 <div className="flex items-center text-sm text-gray-500">
@@ -267,19 +328,13 @@ const UserAdmin: React.FC = () => {
                                             </TableCell>
                                             <TableCell className="text-right">
                                                 <div className="flex justify-end space-x-2">
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        onClick={() => {/* Implementar edición */ }}
-                                                        disabled={user.id === currentUser.id}
-                                                    >
-                                                        <Edit className="h-4 w-4" />
-                                                    </Button>
+                                                    {/* Botón Edit (modificar) eliminado para cumplir con el requerimiento */}
                                                     <Button
                                                         variant="destructive"
                                                         size="sm"
                                                         onClick={() => handleDeleteClick(user)}
                                                         disabled={user.id === currentUser.id || actionLoading}
+                                                        aria-label={`Eliminar ${getDisplayName(user)}`}
                                                     >
                                                         <Trash2 className="h-4 w-4" />
                                                     </Button>
@@ -293,7 +348,7 @@ const UserAdmin: React.FC = () => {
                     </CardContent>
                 </Card>
 
-                {/* Dialog de confirmación para eliminar */}
+                {/* Dialog de confirmación para eliminar */ }
                 <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
                     <DialogContent>
                         <DialogHeader>

@@ -18,6 +18,7 @@ import Games from '@/pages/Catalog/Games';
 import Accessories from '@/pages/Catalog/Accessories';
 import Admin from '@/pages/Admin/Admin';
 import UserAdmin from '@/pages/Admin/UserAdmin';
+import ProtectedAdminRoute from '@/components/auth/ProtectedAdminRoute';
 import ProductDetail from '@/pages/ProductDetail';
 import CheckoutSuccess from './pages/CheckoutSuccess';
 import Checkout from './pages/Checkout';
@@ -64,8 +65,8 @@ function App() {
                 <Route path="/checkout-success" element={<CheckoutSuccess />} />
                 
                 {/* Rutas protegidas - admin */}
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/admin-usuarios" element={<UserAdmin />} />
+<Route path="/admin" element={<ProtectedAdminRoute><Admin /></ProtectedAdminRoute>} />
+<Route path="/admin-usuarios" element={<ProtectedAdminRoute><UserAdmin /></ProtectedAdminRoute>} />
                 
                 {/* Ruta 404 */}
                 <Route path="*" element={
@@ -84,4 +85,3 @@ function App() {
 }
 
 export default App;
-
