@@ -70,7 +70,7 @@ export const productService = {
             description: product.description || '',
             price: product.price,
             stock: product.stock,
-            category: product.category?.name?.toLowerCase() || 'ropa',
+            category: product.categoryName?.toLowerCase() || 'sin categoria',
             image: ImageUtils.isValidImageUrl(product.image)
                 ? product.image
                 : ImageUtils.getDefaultImage(),

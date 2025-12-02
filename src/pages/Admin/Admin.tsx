@@ -80,7 +80,7 @@ const Admin: React.FC = () => {
         description: '',
         price: '',
         stock: '',
-        category: '',
+        categoryName: '',
         image: ''
     });
     const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});
@@ -94,8 +94,6 @@ const Admin: React.FC = () => {
         { value: 'figuras', label: 'Figuras' },
         { value: 'cartas', label: 'Cartas' },
         { value: 'ropa', label: 'Ropa' },
-        { value: 'poleras', label: 'Poleras' },
-        { value: 'polerones', label: 'Polerones' },
         { value: 'videojuegos', label: 'Videojuegos' },
         { value: 'accesorios', label: 'Accesorios' },
     ];
@@ -169,7 +167,7 @@ const Admin: React.FC = () => {
             errors.stock = 'El stock debe ser un número válido ≥ 0';
         }
         
-        if (!formData.category) {
+        if (!formData.categoryName) {
             errors.category = 'Debe seleccionar una categoría';
         }
         
@@ -185,7 +183,7 @@ const Admin: React.FC = () => {
             description: '',
             price: '',
             stock: '',
-            category: '',
+            categoryName: '',
             image: ''
         });
         setFormErrors({});
@@ -201,7 +199,7 @@ const Admin: React.FC = () => {
             description: product.description || '',
             price: product.price.toString(),
             stock: product.stock.toString(),
-            category: product.category,
+            categoryName: product.category,
             image: product.image
         });
         setFormErrors({});
@@ -265,7 +263,7 @@ const Admin: React.FC = () => {
                         description: jsonData.description || '',
                         price: jsonData.price?.toString() || '',
                         stock: jsonData.stock?.toString() || '',
-                        category: (jsonData.categoryName || '').toLowerCase(),
+                        categoryName: (jsonData.categoryName || '').toLowerCase(),
                         image: jsonData.image || ''
                     });
                     
@@ -307,7 +305,7 @@ const Admin: React.FC = () => {
                                     description: formData.description,
                                     price: parseFloat(formData.price),
                                     stock: parseInt(formData.stock),
-                                    categoryName: formData.category,
+                                    categoryName: formData.categoryName,
                                     image: formData.image || ImageUtils.getDefaultImage()
                                 };
 
@@ -348,7 +346,7 @@ const Admin: React.FC = () => {
                     description: '',
                     price: '',
                     stock: '',
-                    category: '',
+                    categoryName: '',
                     image: ''
                 });
             }
@@ -761,9 +759,9 @@ const Admin: React.FC = () => {
                                     )}
                                 </div>
                                 <Select
-                                    value={formData.category}
+                                    value={formData.categoryName}
                                     onValueChange={(value) => {
-                                        setFormData({ ...formData, category: value });
+                                        setFormData({ ...formData, categoryName: value });
                                         if (formErrors.category) setFormErrors({...formErrors, category: ''});
                                     }}
                                     disabled={loading}
@@ -840,7 +838,7 @@ const Admin: React.FC = () => {
                                             description: '',
                                             price: '',
                                             stock: '',
-                                            category: '',
+                                            categoryName: '',
                                             image: ''
                                         });
                                         setFormErrors({});

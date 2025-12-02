@@ -1,7 +1,7 @@
 export const IMAGE_PATHS = {
-    DEFAULT_PRODUCT: '/assets/images/Logo-sin-Fondo.png',
-    LOGO: '/assets/images/logo.png',
-    PLACEHOLDER: '/images/placeholder.jpg',
+    DEFAULT_PRODUCT: 'src/assets/images/Logo-sin-Fondo.png',
+    LOGO: 'src/assets/images/logo.png',
+    PLACEHOLDER: 'src/images/placeholder.jpg',
     
     // Rutas absolutas para desarrollo y producción
     getDefaultProduct() {
