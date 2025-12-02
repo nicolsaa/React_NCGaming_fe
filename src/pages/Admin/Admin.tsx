@@ -1,5 +1,4 @@
-// src/pages/Admin.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { productService } from '@/services/productService';
@@ -54,6 +53,7 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import ProductImage from '@/components/ui/ProductImage';
 import { ImageUtils } from '@/utils/imageUtils';
+import { setSharedImageBase64, getSharedImageBase64 } from '@/utils/sharedImageBase64';
 
 // Interface actualizada
 interface Product {
@@ -88,6 +88,9 @@ const Admin: React.FC = () => {
     const [loadingProducts, setLoadingProducts] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
+    // Nueva variable para almacenar base64 de la imagen cargada
+    const [imageBase64, setImageBase64] = useState<string>('');
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     // Categorías disponibles
     const categories = [
@@ -186,9 +189,19 @@ const Admin: React.FC = () => {
             categoryName: '',
             image: ''
         });
+        setImageBase64('');
         setFormErrors({});
         setError(null);
         setIsDialogOpen(true);
+        setSharedBase64ResetIfNeeded();
+    };
+
+    // Función auxiliar para resetear variable compartida
+    const setSharedBase64ResetIfNeeded = () => {
+        // Resetea la variable compartida si estamos creando un nuevo producto
+        if (typeof setSharedImageBase64 === 'function') {
+            setSharedImageBase64('');
+        }
     };
 
     // Abrir modal para editar producto
@@ -204,6 +217,7 @@ const Admin: React.FC = () => {
         });
         setFormErrors({});
         setError(null);
+        setImageBase64('');
         setIsDialogOpen(true);
     };
 
@@ -237,49 +251,29 @@ const Admin: React.FC = () => {
         }
     };
 
-    // Cargar datos desde JSON
-    const handleLoadFromJSON = () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = '.json';
-        
-        input.onchange = (e: any) => {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            
-            reader.onload = (event) => {
-                try {
-                    const jsonData = JSON.parse(event.target?.result as string);
-                    
-                    // Validar estructura mínima
-                    if (!jsonData.name || !jsonData.categoryName) {
-                        setError('JSON inválido: debe contener name y categoryName');
-                        return;
-                    }
-                    
-                    // Mapear datos del JSON al formulario
-                    setFormData({
-                        name: jsonData.name || '',
-                        description: jsonData.description || '',
-                        price: jsonData.price?.toString() || '',
-                        stock: jsonData.stock?.toString() || '',
-                        categoryName: (jsonData.categoryName || '').toLowerCase(),
-                        image: jsonData.image || ''
-                    });
-                    
-                    setSuccess('✅ Datos cargados desde JSON');
-                    setTimeout(() => setSuccess(null), 2000);
-                    
-                } catch (error: any) {
-                    setError(`❌ Error al parsear JSON: ${error.message}`);
-                }
-            };
-            
-            reader.readAsText(file);
+    // Archivo: subir imagen (archivo local) - base64
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+            setError('El archivo debe ser una imagen');
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+            const result = reader.result as string;
+            setImageBase64(result);
+            // Limpiar cualquier URL existente para evitar conflictos
+            setFormData({ ...formData, image: '' });
+            setError(null);
+            // Guardar en variable compartida para usos posteriores
+            setSharedImageBase64(result);
         };
-        
-        input.click();
+        reader.readAsDataURL(file);
     };
+
+    // Cargar datos desde JSON (ELIMINADO: ya no se usará)
+    // const handleLoadFromJSON = () => { ... };
 
     // Guardar producto (crear o editar)
     const handleSaveProduct = async () => {
@@ -300,14 +294,16 @@ const Admin: React.FC = () => {
             }
 
             // Preparar datos para enviar
-                                const productData = {
-                                    name: formData.name,
-                                    description: formData.description,
-                                    price: parseFloat(formData.price),
-                                    stock: parseInt(formData.stock),
-                                    categoryName: formData.categoryName,
-                                    image: formData.image || ImageUtils.getDefaultImage()
-                                };
+
+            const imageToSend = imageBase64 || formData.image || getSharedImageBase64() || ImageUtils.getDefaultImage();
+            const productData = {
+                name: formData.name,
+                description: formData.description,
+                price: parseFloat(formData.price),
+                stock: parseInt(formData.stock),
+                categoryName: formData.categoryName,
+                image: imageToSend
+            };
 
             console.log('Enviando datos al backend:', productData);
 
@@ -349,6 +345,7 @@ const Admin: React.FC = () => {
                     categoryName: '',
                     image: ''
                 });
+                setImageBase64('');
             }
             
             // Actualizar contexto global
@@ -491,14 +488,6 @@ const Admin: React.FC = () => {
                                         <Plus className="h-4 w-4" />
                                         Agregar Primer Producto
                                     </Button>
-                                    <Button 
-                                        variant="outline" 
-                                        onClick={handleLoadFromJSON}
-                                        className="gap-2"
-                                    >
-                                        <Upload className="h-4 w-4" />
-                                        Importar desde JSON
-                                    </Button>
                                 </div>
                             </div>
                         ) : (
@@ -578,9 +567,7 @@ const Admin: React.FC = () => {
                                                                 : product.stock > 0 
                                                                 ? 'text-orange-600' 
                                                                 : 'text-red-700'
-                                                        }`}>
-                                                            {product.stock}
-                                                        </span>
+                                                        }`}>{product.stock}</span>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell>
@@ -781,19 +768,32 @@ const Admin: React.FC = () => {
                                 </Select>
                             </div>
 
-                            {/* Imagen */}
+                            {/* Imagen (upload local) */}
                             <div className="space-y-2">
-                                <Label htmlFor="image" className="font-medium text-gray-700 flex items-center gap-2">
+                                <Label className="font-medium text-gray-700 flex items-center gap-2">
                                     <ImageIcon className="h-4 w-4" />
-                                    URL de Imagen
+                                    Subir Imagen (base64)
                                 </Label>
-                                <Input
-                                    id="image"
-                                    value={formData.image}
-                                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                                    placeholder="https://ejemplo.com/imagen.jpg o /ruta/local/imagen.png"
-                                    disabled={loading}
-                                />
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => fileInputRef.current?.click()}
+                                        className="px-3 py-2 rounded-md bg-purple-600 text-white hover:bg-purple-700 flex items-center gap-2"
+                                    >
+                                        <Upload className="h-4 w-4" />
+                                        Subir imagen
+                                    </button>
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        accept="image/*"
+                                        style={{ display: 'none' }}
+                                        onChange={handleFileChange}
+                                    />
+                                    {imageBase64 && (
+                                        <span className="text-sm text-gray-700">Cargado</span>
+                                    )}
+                                </div>
                                 <p className="text-xs text-gray-500">
                                     Opcional. Si no se proporciona, se usará: <code className="text-xs bg-gray-100 px-1 rounded">{ImageUtils.getDefaultImage()}</code>
                                 </p>
@@ -806,14 +806,14 @@ const Admin: React.FC = () => {
                                 </Label>
                                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
                                     <ProductImage
-                                        src={formData.image || ImageUtils.getDefaultImage()}
+                                        src={imageBase64 || formData.image || ImageUtils.getDefaultImage()}
                                         alt="Vista previa del producto"
                                         className="w-full h-48 rounded-lg"
                                         objectFit="contain"
                                         fallbackSrc={ImageUtils.getDefaultImage()}
                                     />
                                     <p className="text-center text-sm text-gray-500 mt-2">
-                                        {formData.image ? '📸 Imagen personalizada' : '🖼️ Imagen por defecto'}
+                                        {imageBase64 ? 'Imagen cargada (base64)' : (formData.image ? 'Imagen URL' : 'Imagen por defecto')}
                                     </p>
                                 </div>
                             </div>
@@ -821,15 +821,7 @@ const Admin: React.FC = () => {
 
                         <DialogFooter className="flex flex-col sm:flex-row gap-3 pt-4">
                             <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                                <Button
-                                    variant="outline"
-                                    onClick={handleLoadFromJSON}
-                                    disabled={loading}
-                                    className="gap-2"
-                                >
-                                    <Upload className="h-4 w-4" />
-                                    Cargar JSON
-                                </Button>
+                                {/* Botón de JSON eliminado */}
                                 <Button
                                     variant="ghost"
                                     onClick={() => {
@@ -842,6 +834,7 @@ const Admin: React.FC = () => {
                                             image: ''
                                         });
                                         setFormErrors({});
+                                        setImageBase64('');
                                     }}
                                     disabled={loading}
                                     className="gap-2"
