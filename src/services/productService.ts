@@ -1,6 +1,7 @@
 // src/services/productService.ts
 import type { Product } from '@/types';
 import { ImageUtils } from '@/utils/imageUtils';
+import { categoryService } from '@/services/categoryService';
 
 
 const API_BASE_URL = 'http://localhost:8080/api/products';
@@ -33,6 +34,20 @@ async function readJsonSafe<T>(response: Response): Promise<T> {
     throw new Error(text || 'Respuesta no JSON');
 }
 
+async function ensureCategoryExists(categoryName: string, token: string): Promise<string> {
+    const backendCategoryName = categoryService.mapCategoryForBackend((categoryName ?? '').toLowerCase());
+    try {
+        const existingCategories = await categoryService.getAllCategories();
+        const exists = existingCategories?.some((c) => c.name.toLowerCase() === backendCategoryName.toLowerCase());
+        if (!exists) {
+            await categoryService.createCategory({ name: backendCategoryName }, token);
+        }
+    } catch (e) {
+        console.error('Error ensuring category exists', e);
+    }
+    return backendCategoryName;
+}
+
 export const productService = {
 
 
@@ -55,7 +70,7 @@ export const productService = {
             description: product.description || '',
             price: product.price,
             stock: product.stock,
-            category: product.category?.name?.toLowerCase() || 'general',
+            category: product.category?.name?.toLowerCase() || 'ropa',
             image: ImageUtils.isValidImageUrl(product.image)
                 ? product.image
                 : ImageUtils.getDefaultImage(),
@@ -83,7 +98,7 @@ export const productService = {
             description: product.description || '',
             price: product.price,
             stock: product.stock,
-            category: product.category?.name?.toLowerCase() || 'general',
+            category: product.category?.name?.toLowerCase() || 'ropa',
             image: ImageUtils.isValidImageUrl(product.image)
                 ? product.image
                 : ImageUtils.getDefaultImage(),
@@ -108,7 +123,7 @@ export const productService = {
             description: product.description || '',
             price: product.price,
             stock: product.stock,
-            category: product.category?.name?.toLowerCase() || 'general',
+            category: product.category?.name?.toLowerCase() || 'ropa',
             image: ImageUtils.isValidImageUrl(product.image)
                 ? product.image
                 : ImageUtils.getDefaultImage(),
@@ -133,7 +148,7 @@ export const productService = {
             description: product.description || '',
             price: product.price,
             stock: product.stock,
-            category: product.category?.name?.toLowerCase() || 'general',
+            category: product.category?.name?.toLowerCase() || 'ropa',
             image: ImageUtils.isValidImageUrl(product.image)
                 ? product.image
                 : ImageUtils.getDefaultImage(),
@@ -158,7 +173,7 @@ export const productService = {
             description: product.description || '',
             price: product.price,
             stock: product.stock,
-            category: product.category?.name?.toLowerCase() || 'general',
+            category: product.category?.name?.toLowerCase() || 'ropa',
             image: ImageUtils.isValidImageUrl(product.image)
                 ? product.image
                 : ImageUtils.getDefaultImage(),
@@ -169,13 +184,18 @@ export const productService = {
 
     // Crear producto (solo admin)
     async createProduct(productData: CreateProductDTO, token: string): Promise<Product> {
+        const backendCategoryName = await ensureCategoryExists(productData.categoryName ?? '', token);
+        const payload = { ...productData, categoryName: backendCategoryName };
+
+
         const response = await fetch(`${API_BASE_URL}`, {
+
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
             },
-            body: JSON.stringify(productData),
+            body: JSON.stringify(payload),
         });
         console.log('Respuesta status:', response.status);
 
@@ -200,7 +220,7 @@ export const productService = {
             description: product.description || '',
             price: product.price,
             stock: product.stock,
-            category: product.category?.name?.toLowerCase() ?? (product.categoryName ?? (productData as any).categoryName ?? ''),
+            category: product.category?.name?.toLowerCase() ?? (product.categoryName ?? (productData as any).categoryName ?? 'ropa'),
             image: ImageUtils.isValidImageUrl(product.image)
                 ? product.image
                 : ImageUtils.getDefaultImage(),
@@ -247,7 +267,7 @@ export const productService = {
                 description: product.description || '',
                 price: product.price,
                 stock: product.stock,
-                category: product.category?.name?.toLowerCase() || productData.category?.toLowerCase() || 'general',
+                category: product.category?.name?.toLowerCase() ?? productData.category?.toLowerCase() ?? 'ropa',
                 image: ImageUtils.isValidImageUrl(product.image)
                     ? product.image
                     : ImageUtils.getDefaultImage(),
@@ -273,7 +293,7 @@ export const productService = {
             'juegos': 'Videojuegos',
             'accesorios': 'Accesorios'
         };
-        
+
         return categoryMap[category] || category.charAt(0).toUpperCase() + category.slice(1);
     },
 

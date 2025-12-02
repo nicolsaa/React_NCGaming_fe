@@ -1,13 +1,13 @@
 // src/context/ProductsContext.tsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import type { Product } from '@/types';
+import type { Product, Category } from '@/types';
 import { productService } from '@/services/productService';
 
 interface ProductsContextType {
     products: Product[];
     loading: boolean;
     featuredProducts: Product[];
-    getProductsByCategory: (category: string) => Product[];
+    getProductsByCategory: (category: Category) => Product[];
     refreshProducts: () => Promise<void>;
 }
 
@@ -68,7 +68,7 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }, []);
 
     const featuredProducts = products.filter(p => (p as any).featured);
-    const getProductsByCategory = (category: string) => 
+    const getProductsByCategory = (category: Category) =>
         products.filter(p => p.category === category);
 
     return (
